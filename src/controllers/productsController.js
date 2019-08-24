@@ -1,9 +1,8 @@
 import uuidv4 from 'uuid/v4';
 import { successResponse } from '../utils/response';
-import models from '../models';
 import { s3UploadBase64, s3RemoveFile } from '../utils/aws';
 
-// const { Product, User, Review } = models;
+import {Product, Review} from '../models';
 
 const productsController = {
     addProduct: async (req, res) => {

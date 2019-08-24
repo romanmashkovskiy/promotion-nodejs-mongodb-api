@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "concurrently \"cross-env PORT=4002 nodemon ./src/server.js --exec babel-node\"",
-    "db:setup": "babel-node ./src/bin/db",
+    "db:seed": "babel-node ./src/bin/seed",
     "build": "babel src -d dist",
     "start": "node ./dist/server.js"
   },

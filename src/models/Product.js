@@ -14,6 +14,11 @@ const ProductSchema = new Schema({
         name: String,
         url: String
     }],
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    }
 }, {
     timestamps: true,
     toJSON: {

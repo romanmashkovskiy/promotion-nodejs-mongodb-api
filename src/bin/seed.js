@@ -1,90 +1,119 @@
-import models from '../models';
+#!/usr/bin/env node
 
-const {User, Product, Review} = models;
+import 'babel-polyfill';
+import mongoose from '../core/mongoose';
+import { User, Product, Review } from '../models';
 
-const seed = () => {
-    return Promise.all([
-        User.create({
-            id: '0c683b6e-32d5-445d-bd1a-589ea455106b',
-            userName: 'User1',
-            email: 'user1@gmail.com',
-            password: 'asdfasdf'
-        }),
-        User.create({
-            id: 'ad912e3f-432c-4723-8245-2eb3a665b0b0',
-            userName: 'User2',
-            email: 'user2@gmail.com',
-            password: 'asdfasdf'
-        }),
-        Product.create({
-            id: '7fd51310-f0a4-4f50-8203-66fb098ff4e1',
-            title: 'Phone1',
-            description: 'nice phone1',
-            pictures: []
-        }),
-        Product.create({
-            id: '5c180ddc-5073-41fe-8fae-4223ed0bb39e',
-            title: 'Phone2',
-            description: 'nice phone2',
-            pictures: []
-        }),
-        Product.create({
-            id: 'b817c071-9784-451f-a737-c124c862fd96',
-            title: 'Phone3',
-            description: 'nice phone3',
-            pictures: []
-        }),
-        Product.create({
-            id: 'd33be0c7-50b8-4c17-9dfe-2683272e7bc6',
-            title: 'Phone4',
-            description: 'nice phone4',
-            pictures: []
-        }),
-        Review.create({
-            id: '0ad7a87c-26e1-4798-92b5-ad943c5f976c',
-            rating: 1,
-            text: 'very bad phone'
-        }),
-        Review.create({
-            id: 'fe79babe-2bc6-4499-8daf-5515080a8c01',
-            rating: 2,
-            text: 'bad phone'
-        }),
-        Review.create({
-            id: '1343c8cc-dfc5-4fbe-84aa-1783597149fb',
-            rating: 3,
-            text: 'not bad phone'
-        }),
-        Review.create({
-            id: 'da6347c3-8192-48b0-96ab-64ed6787940a',
-            rating: 4,
-            text: 'good phone'
-        }),
-        Review.create({
-            id: 'd7a4fe0c-0aa5-4a27-854b-db1ea556119a',
-            rating: 5,
-            text: 'very good phone'
-        }),
-    ])
-        .then(([User1, User2, Product1, Product2, Product3, Product4, Review1, Review2, Review3, Review4, Review5]) => {
-            return Promise.all([
-                Product1.setUser(User1),
-                Product2.setUser(User1),
-                Product3.setUser(User2),
-                Product4.setUser(User2),
-                Review1.setProduct(Product1),
-                Review2.setProduct(Product2),
-                Review3.setProduct(Product3),
-                Review4.setProduct(Product4),
-                Review5.setProduct(Product4),
-                Review1.setUser(User1),
-                Review2.setUser(User1),
-                Review3.setUser(User1),
-                Review4.setUser(User2),
-                Review5.setUser(User2),
-            ]);
-        })
-        .catch(error => console.log(error));
-};
+const seedUsers = [
+    {
+        _id: '5d616bf8d5ddb142e8c55bcc',
+        userName: 'User1',
+        email: 'user1@gmail.com',
+        password: 'asdfasdf'
+    },
+    {
+        _id: '5d616bf8d5ddb142e8c55bcd',
+        userName: 'User2',
+        email: 'user2@gmail.com',
+        password: 'asdfasdf'
+    },
+];
 
-export default seed;
+const seedProducts = [
+    {
+        _id: '5d6176a5d0145f48ac2777d7',
+        title: 'Phone1',
+        description: 'nice phone1',
+        pictures: [],
+        user: 0
+    },
+    {
+        _id: '5d6176a5d0145f48ac2777d8',
+        title: 'Phone2',
+        description: 'nice phone2',
+        pictures: [],
+        user: 0
+    },
+    {
+        _id: '5d6176a5d0145f48ac2777d9',
+        title: 'Phone3',
+        description: 'nice phone3',
+        pictures: [],
+        user: 1
+    },
+    {
+        _id: '5d6176a5d0145f48ac2777da',
+        title: 'Phone4',
+        description: 'nice phone4',
+        pictures: [],
+        user: 1
+    },
+];
+
+const seedReviews = [
+    {
+        _id: '5d6178ba900d4749a88a9191',
+        rating: 1,
+        text: 'very bad phone',
+        user: 0,
+        product: 0
+    },
+    {
+        _id: '5d6178ba900d4749a88a9192',
+        rating: 2,
+        text: 'bad phone',
+        user: 0,
+        product: 1
+    },
+    {
+        _id: '5d6178ba900d4749a88a9193',
+        rating: 3,
+        text: 'not bad phone',
+        user: 1,
+        product: 2
+    },
+    {
+        _id: '5d6178ba900d4749a88a9194',
+        rating: 4,
+        text: 'good phone',
+        user: 1,
+        product: 3
+    },
+    {
+        _id: '5d6178ba900d4749a88a9195',
+        rating: 5,
+        text: 'very good phone',
+        user: 1,
+        product: 3
+    },
+];
+
+mongoose.connection.once('open', async () => {
+    /* Users */
+    await User.deleteMany();
+    console.log('Users collection removed');
+    const users = await seedUsers.reduce(async (accum, user) => [...(await accum), await User.create(user)], Promise.resolve([]));
+    console.log(`${ users.length } users success added`);
+
+    /* Products */
+    await Product.deleteMany();
+    console.log('Products collection removed');
+    const products = await Promise.all(seedProducts.map(product => Product.create({
+        ...product,
+        user: users[product.user].id
+    })));
+    console.log(`${ products.length } products success added`);
+
+    /* Reviews */
+    await Review.deleteMany();
+    console.log('Products collection removed');
+    const reviews = await Promise.all(seedReviews.map(review => Review.create({
+        ...review,
+        user: users[review.user].id,
+        product: products[review.product].id
+    })));
+    console.log(`${ reviews.length } reviews success added`);
+
+    /* Exit */
+    process.exit(0);
+});
