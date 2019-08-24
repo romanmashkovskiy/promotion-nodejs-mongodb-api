@@ -59,14 +59,9 @@ const productsController = {
     },
 
     getProducts: async (req, res) => {
-        const products = await Product.findAll({
-            include: [
-                {
-                    model: User,
-                    attributes: ['userName', 'email']
-                }
-            ]
-        });
+        const products = await Product
+            .find()
+            .populate('user');
 
         return successResponse(res, products);
     },
