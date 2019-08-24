@@ -1,0 +1,352 @@
+{
+	"info": {
+		"_postman_id": "463597a0-b15c-45bc-a621-1edb84da7052",
+		"name": "promotion",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userName\": \"user1\",\n  \"email\": \"user1@gmail.com\",\n  \"password\": \"asdfasdf\"\n}"
+						},
+						"url": {
+							"raw": "{{API_URL}}/auth/register",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "aef6a97b-1e58-4ea9-b384-28aa70eb4f23",
+								"exec": [
+									"const { token } = pm.response.json();",
+									"",
+									"pm.environment.set('TOKEN', token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXVpZCI6IjFiMTI2MTdhLTAzNWYtNDg2Mi1hOWY5LWQ3YWE4NTkzMGVmYSIsImlhdCI6MTU2NTUzNzg0NCwiZXhwIjoxNTY1NTczODQ0fQ.ZI-pGeN2kpDkvD3rEwqyP1o95d9JNq4FIXsP6FaRigI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"bob@gmail.com\",\n  \"password\": \"asdfasdf\"\n}"
+						},
+						"url": {
+							"raw": "{{API_URL}}/auth/login",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fetch Auth User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{API_URL}}/auth/me",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"auth",
+								"me"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Products",
+			"item": [
+				{
+					"name": "Products list",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{API_URL}}/products",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "My products list",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{API_URL}}/my-products",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"my-products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"product\",\n  \"description\": \"description\"\n}"
+						},
+						"url": {
+							"raw": "{{API_URL}}/my-products",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"my-products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get product",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{API_URL}}/my-products/:id",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"my-products",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "5c180ddc-5073-41fe-8fae-4223ed0bb39e"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change product",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"product1\",\n  \"description\": \"description1\"\n}"
+						},
+						"url": {
+							"raw": "{{API_URL}}/my-products/:id",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"my-products",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete product",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{API_URL}}/my-products/:id",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"my-products",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "5c180ddc-5073-41fe-8fae-4223ed0bb39e"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
