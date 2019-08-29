@@ -2,7 +2,7 @@ import uuidv4 from 'uuid/v4';
 import { successResponse } from '../utils/response';
 import { s3UploadBase64, s3RemoveFile } from '../utils/aws';
 
-import {Product, Review} from '../models';
+import { Product, Review } from '../models';
 
 const productsController = {
     addProduct: async (req, res) => {
@@ -23,14 +23,9 @@ const productsController = {
     getMyProducts: async (req, res) => {
         const { user } = req;
 
-        const products = await user.getProducts({
-            include: [
-                {
-                    model: User,
-                    attributes: ['userName', 'email']
-                }
-            ]
-        });
+        const products = await Product
+            .find({ user: user._id })
+            .populate('user');
 
         return successResponse(res, products);
     },
@@ -38,22 +33,12 @@ const productsController = {
     getProduct: async (req, res) => {
         const { params: { id } } = req;
 
-        const product = await Product.findByPk(id, {
-                include: [
-                    {
-                        model: User,
-                        attributes: ['userName', 'email']
-                    },
-                    {
-                        model: Review,
-                        include: [{
-                            model: User,
-                            attributes: ['userName', 'email']
-                        }]
-                    }
-                ]
-            }
-        );
+        const product = await Product
+            .findById(id)
+            .populate('user')
+            .populate('reviews');
+
+        console.log(product);
 
         return successResponse(res, product);
     },
@@ -69,11 +54,8 @@ const productsController = {
     deleteProduct: async (req, res) => {
         const { params: { id } } = req;
 
-        await Product.destroy({
-            where: {
-                id
-            }
-        });
+        const result = await Product.deleteOne({ _id: id });
+        console.log(result);
 
         return successResponse(res, { message: 'Product deleted successfully' });
     },

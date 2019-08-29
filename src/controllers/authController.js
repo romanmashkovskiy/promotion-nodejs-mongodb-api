@@ -1,11 +1,11 @@
-import {successResponse} from '../utils/response';
-import {User} from '../models';
+import { successResponse } from '../utils/response';
+import { User } from '../models';
 
 const authController = {
     register: async (req, res) => {
-        const {userName, email, password} = req.body;
+        const { userName, email, password } = req.body;
 
-        const user = await User.create({userName, email, password});
+        const user = await User.create({ userName, email, password });
         const token = await user.getToken();
 
         return successResponse(res, {
@@ -15,7 +15,7 @@ const authController = {
     },
 
     login: async (req, res) => {
-        const {user} = req;
+        const { user } = req;
 
         const token = await user.getToken();
 
@@ -25,7 +25,7 @@ const authController = {
         });
     },
 
-    getMe: async ({user}, res) => successResponse(res, {
+    getMe: async ({ user }, res) => successResponse(res, {
         user
     }),
 };

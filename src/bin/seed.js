@@ -92,21 +92,25 @@ mongoose.connection.once('open', async () => {
     /* Users */
     await User.deleteMany();
     console.log('Users collection removed');
-    const users = await seedUsers.reduce(async (accum, user) => [...(await accum), await User.create(user)], Promise.resolve([]));
+    const users = await Promise.all(seedUsers.map(user => User.create({
+        ...user
+    })));
     console.log(`${ users.length } users success added`);
 
     /* Products */
     await Product.deleteMany();
     console.log('Products collection removed');
-    const products = await Promise.all(seedProducts.map(product => Product.create({
-        ...product,
-        user: users[product.user].id
-    })));
+    const products = await Promise.all(seedProducts.map((product, index) => Product.create({
+            ...product,
+            user: users[product.user].id,
+            reviews: seedReviews.filter(review => review.product === index).map(review => review._id)
+        })
+    ));
     console.log(`${ products.length } products success added`);
 
     /* Reviews */
     await Review.deleteMany();
-    console.log('Products collection removed');
+    console.log('Reviews collection removed');
     const reviews = await Promise.all(seedReviews.map(review => Review.create({
         ...review,
         user: users[review.user].id,
