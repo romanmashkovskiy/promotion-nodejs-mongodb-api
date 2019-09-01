@@ -11,10 +11,11 @@ const productsController = {
         const promises = pictures.map(picture => s3UploadBase64(`${ uuidv4() }-${ picture.name }`, picture));
         const picturesUrl = await Promise.all(promises);
 
-        await user.createProduct({
+        await Product.create({
             title,
             description,
-            pictures: picturesUrl
+            pictures: picturesUrl,
+            user: user._id,
         });
 
         return successResponse(res, { message: 'Product created successfully' });
@@ -36,10 +37,12 @@ const productsController = {
         const product = await Product
             .findById(id)
             .populate('user')
-            .populate('reviews');
-
-        console.log(product);
-
+            .populate({
+                path: 'reviews',
+                populate: {
+                    path: 'user'
+                }
+            });
         return successResponse(res, product);
     },
 
@@ -54,8 +57,10 @@ const productsController = {
     deleteProduct: async (req, res) => {
         const { params: { id } } = req;
 
-        const result = await Product.deleteOne({ _id: id });
-        console.log(result);
+        const product = await Product.findById(id);
+        await Promise.all(product.pictures.map(picture => s3RemoveFile(picture.s3Key)));
+
+        await Product.deleteOne({ _id: id });
 
         return successResponse(res, { message: 'Product deleted successfully' });
     },
@@ -67,20 +72,18 @@ const productsController = {
         const picturesUrlAdded = await Promise.all(promisesAdded);
         await Promise.all(deletedPictures.map(picture => s3RemoveFile(picture.s3Key)));
 
-        const product = await Product.findByPk(id);
+        const product = await Product.findById(id);
 
         const updatedPictures = product.pictures
             .filter(picture => !deletedPictures.find(pictureDeleted => picture.s3Key === pictureDeleted.s3Key))
             .concat(picturesUrlAdded);
 
-        await Product.update({
+        await Product.updateOne({
+            _id: id
+        }, {
             title,
             description,
             pictures: updatedPictures
-        }, {
-            where: {
-                id
-            }
         });
 
         return successResponse(res, { message: 'Product changed successfully' });
@@ -89,12 +92,16 @@ const productsController = {
     addReview: async (req, res) => {
         const { user, body: { rating, text }, params: { id } } = req;
 
-        await Review.create({
+        const review = await Review.create({
             rating,
             text,
-            userId: user.id,
-            productId: id
+            user: user._id,
+            product: id
         });
+
+        const product = await Product.findById(id);
+        product.reviews.push(review);
+        await product.save();
 
         return successResponse(res, { message: 'Review added successfully' });
     }
