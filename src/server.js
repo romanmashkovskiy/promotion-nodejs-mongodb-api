@@ -18,7 +18,7 @@ app.use(bodyParser.json({ limit: '10mb' }));
 
 app.use(passport.initialize());
 
-app.use('/api', apiRouter);
+app.use('/api2', apiRouter);
 
 app.use((req, res, next) => res.status(404).send(`${ req.url } - Not Found`));
 
