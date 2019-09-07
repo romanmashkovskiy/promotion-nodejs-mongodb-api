@@ -23,8 +23,6 @@ const UserSchema = new Schema({
         type: String,
         required: true,
         trim: true,
-        minlength: [6, 'Password is too short'],
-        maxLength: [25, 'Password is too long'],
     },
     resetPasswordCode: {
         type: String,
@@ -43,7 +41,6 @@ const UserSchema = new Schema({
     timestamps: true,
     toJSON: {
         transform: (doc, ret) => {
-            delete ret.password;
             delete ret.password;
             delete ret.resetPasswordCode;
             delete ret.confirmEmailCode;
