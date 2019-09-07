@@ -2,8 +2,8 @@ import PromiseRouter from 'express-promise-router';
 import { authController, productsController } from '../controllers';
 import APIError from '../utils/APIError';
 import { errorResponse } from '../utils/response';
-import { loginGuard, accessGuard } from '../middlewares';
-import { pick } from 'lodash';
+import { loginGuard, accessGuard, resetPasswordGuard } from '../middlewares';
+import { pick, values } from 'lodash';
 
 const Router = PromiseRouter();
 
@@ -11,6 +11,10 @@ const Router = PromiseRouter();
 Router.post('/auth/register', authController.register);
 Router.post('/auth/login', loginGuard(), authController.login);
 Router.get('/auth/me', accessGuard(), authController.getMe);
+Router.post('/auth/email-confirm', accessGuard(), authController.confirmEmail);
+Router.post('/auth/password-reset', resetPasswordGuard(), authController.resetPassword);
+Router.post('/auth/password-restore', resetPasswordGuard(), authController.restorePassword);
+Router.post('/auth/send-confirm-code', accessGuard(), authController.sendConfirmEmailCode);
 
 /*Products*/
 Router.post('/my-products', accessGuard(), productsController.addProduct);

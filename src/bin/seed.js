@@ -9,13 +9,15 @@ const seedUsers = [
         _id: '5d616bf8d5ddb142e8c55bcc',
         userName: 'User1',
         email: 'user1@gmail.com',
-        password: 'asdfasdf'
+        password: 'asdfasdf',
+        isConfirmed: true
     },
     {
         _id: '5d616bf8d5ddb142e8c55bcd',
         userName: 'User2',
         email: 'user2@gmail.com',
-        password: 'asdfasdf'
+        password: 'asdfasdf',
+        isConfirmed: true
     },
 ];
 
