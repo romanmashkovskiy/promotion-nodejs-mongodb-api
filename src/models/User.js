@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken';
 import env from '../config/env';
 import { pick } from 'lodash';
 import { generateHash, validateHash } from '../utils/hash';
+import { sesSendEmail } from '../utils/aws';
 import mongoose, { Schema } from 'mongoose';
 import uniqueValidator from 'mongoose-unique-validator';
 
@@ -83,30 +84,40 @@ class UserClass {
 
     async sendResetPasswordCode() {
         this.resetPasswordCode = Math.random().toString(36).substring(2, 6);
+        const subject = 'Reset password';
         if (env.DEBUG === 'true') {
             console.log(
                 this.email,
-                'no-reply@inspectagram.net',
-                'Reset password',
-                `Reset code is: ${ this.resetPasswordCode }`
+                subject,
+                `Reset password code is: ${ this.resetPasswordCode }`
             );
         } else {
-
+            await sesSendEmail(
+                user.email,
+                env.EMAIL_FROM,
+                subject,
+                `Reset password code is: ${ this.resetPasswordCode }`
+            );
         }
         await this.save();
     }
 
     async sendConfirmEmailCode() {
         this.confirmEmailCode = Math.random().toString(36).substring(2, 6);
+        const subject = 'Confirm email';
         if (env.DEBUG === 'true') {
             console.log(
                 this.email,
-                'no-reply@inspectagram.net',
-                'Email confirmation',
+                subject,
                 `Verification code is: ${ this.confirmEmailCode }`
             );
         } else {
-
+            await sesSendEmail(
+                this.email,
+                env.EMAIL_FROM,
+                subject,
+                `Verification code is: ${ this.confirmEmailCode }`
+            );
         }
         await this.save();
     }
@@ -130,18 +141,23 @@ UserSchema.pre('save', async function () {
     }
 });
 
-UserSchema.post('save', async function(doc) {
+UserSchema.post('save', async function (doc) {
     if (doc.wasModifiedEmail) {
-        const subject = 'Confirm Your Email';
+        const subject = 'Confirm email';
         if (env.DEBUG === 'true') {
             console.log(
                 this.email,
                 env.EMAIL_FROM,
                 subject,
-                `Your verification code is: ${ this.confirmEmailCode }`
+                `Verification code is: ${ this.confirmEmailCode }`
             );
         } else {
-
+            await sesSendEmail(
+                this.email,
+                env.EMAIL_FROM,
+                subject,
+                `Verification code is: ${ this.confirmEmailCode }`
+            );
         }
     }
 });

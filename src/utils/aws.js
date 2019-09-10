@@ -6,7 +6,8 @@ AWS.config.update({
     secretAccessKey: env.AWS_SECRET,
     region: env.AWS_REGION
 });
-export const s3 = new AWS.S3();
+const s3 = new AWS.S3();
+const ses = new AWS.SES();
 
 export const s3UploadBase64 = (key, picture) => new Promise((resolve, reject) => {
     const buf = Buffer.from(picture.base64.replace(/^data:image\/\w+;base64,/, ''), 'base64');
@@ -38,6 +39,42 @@ export const s3RemoveFile = (key) => new Promise((resolve, reject) => {
         if (error) {
             reject(error);
         } else {
+            resolve(data);
+        }
+    });
+});
+
+export const sesSendEmail = (to, from, subject, text, html = null) => new Promise((resolve, reject) => {
+    const params = {
+        Source: from,
+        Destination: {
+            ToAddresses: [to]
+        },
+        Message: {
+            Subject: {
+                Data: subject,
+                Charset: 'UTF-8'
+            },
+            Body: {
+                Text: {
+                    Data: text,
+                    Charset: 'UTF-8'
+                },
+                Html: {
+                    // HTML Format of the email
+                    Data: html || text,
+                    Charset: 'UTF-8'
+                }
+
+            }
+        },
+    };
+
+    new AWS.SES({ apiVersion: '2010-12-01', region: 'us-east-1' }).sendEmail(params, (err, data) => {
+        if (err) {
+            reject(err);
+        }
+        else {
             resolve(data);
         }
     });
