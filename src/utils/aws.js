@@ -43,39 +43,3 @@ export const s3RemoveFile = (key) => new Promise((resolve, reject) => {
         }
     });
 });
-
-export const sesSendEmail = (to, from, subject, text, html = null) => new Promise((resolve, reject) => {
-    const params = {
-        Source: from,
-        Destination: {
-            ToAddresses: [to]
-        },
-        Message: {
-            Subject: {
-                Data: subject,
-                Charset: 'UTF-8'
-            },
-            Body: {
-                Text: {
-                    Data: text,
-                    Charset: 'UTF-8'
-                },
-                Html: {
-                    // HTML Format of the email
-                    Data: html || text,
-                    Charset: 'UTF-8'
-                }
-
-            }
-        },
-    };
-
-    new AWS.SES({ apiVersion: '2010-12-01', region: 'us-east-1' }).sendEmail(params, (err, data) => {
-        if (err) {
-            reject(err);
-        }
-        else {
-            resolve(data);
-        }
-    });
-});

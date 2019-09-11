@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import env from '../config/env';
 import { pick } from 'lodash';
 import { generateHash, validateHash } from '../utils/hash';
-import { sesSendEmail } from '../utils/aws';
+import sendEmail from '../utils/email';
 import mongoose, { Schema } from 'mongoose';
 import uniqueValidator from 'mongoose-unique-validator';
 
@@ -112,9 +112,8 @@ class UserClass {
                 `Verification code is: ${ this.confirmEmailCode }`
             );
         } else {
-            await sesSendEmail(
+            await sendEmail(
                 this.email,
-                env.EMAIL_FROM,
                 subject,
                 `Verification code is: ${ this.confirmEmailCode }`
             );
@@ -152,9 +151,8 @@ UserSchema.post('save', async function (doc) {
                 `Verification code is: ${ this.confirmEmailCode }`
             );
         } else {
-            await sesSendEmail(
+            await sendEmail(
                 this.email,
-                env.EMAIL_FROM,
                 subject,
                 `Verification code is: ${ this.confirmEmailCode }`
             );
