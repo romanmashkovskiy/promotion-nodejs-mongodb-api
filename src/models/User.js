@@ -92,9 +92,8 @@ class UserClass {
                 `Reset password code is: ${ this.resetPasswordCode }`
             );
         } else {
-            await sesSendEmail(
-                user.email,
-                env.EMAIL_FROM,
+            await sendEmail(
+                this.email,
                 subject,
                 `Reset password code is: ${ this.resetPasswordCode }`
             );
