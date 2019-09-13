@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "7e5ffc57-5d76-4fcd-b34e-fd069e864619",
+		"_postman_id": "01b8a006-c502-4624-8a2d-5fe3d06af295",
 		"name": "promotion",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -366,7 +366,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "5c180ddc-5073-41fe-8fae-4223ed0bb39e"
+									"value": "5d7bddc0264eef3de9b41cc2"
 								}
 							]
 						}
@@ -410,7 +410,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "5c180ddc-5073-41fe-8fae-4223ed0bb39e"
+									"value": "5d7bddc0264eef3de9b41cc2"
 								}
 							]
 						}
@@ -454,7 +454,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "5c180ddc-5073-41fe-8fae-4223ed0bb39e"
+									"value": "5d7bddc0264eef3de9b41cc2"
 								}
 							]
 						}
@@ -499,7 +499,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "b817c071-9784-451f-a737-c124c862fd96"
+									"value": "5d6176a5d0145f48ac2777da"
 								}
 							]
 						}
