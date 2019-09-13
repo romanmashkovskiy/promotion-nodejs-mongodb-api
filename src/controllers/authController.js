@@ -33,6 +33,10 @@ const authController = {
     confirmEmail: async (req, res) => {
         const { user, body: { code } } = req;
 
+        if (user.isConfirmed) {
+            throw new APIError('User already confirmed.', 422);
+        }
+
         if (!user.verifyConfirmEmailCode(code)) {
             throw new APIError('Confirmation code is incorrect.', 422);
         }
@@ -47,6 +51,10 @@ const authController = {
 
     sendConfirmEmailCode: async (req, res) => {
         const { user } = req;
+
+        if (user.isConfirmed) {
+            throw new APIError('User already confirmed.', 422);
+        }
 
         await user.sendConfirmEmailCode();
 

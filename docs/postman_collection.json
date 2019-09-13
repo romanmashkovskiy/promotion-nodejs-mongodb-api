@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "463597a0-b15c-45bc-a621-1edb84da7052",
+		"_postman_id": "7e5ffc57-5d76-4fcd-b34e-fd069e864619",
 		"name": "promotion",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -21,7 +21,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"userName\": \"user1\",\n  \"email\": \"user1@gmail.com\",\n  \"password\": \"asdfasdf\"\n}"
+							"raw": "{\n  \"userName\": \"user3\",\n  \"email\": \"user3@gmail.com\",\n  \"password\": \"asdfasdf\"\n}"
 						},
 						"url": {
 							"raw": "{{API_URL}}/auth/register",
@@ -54,14 +54,7 @@
 					],
 					"request": {
 						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXVpZCI6IjFiMTI2MTdhLTAzNWYtNDg2Mi1hOWY5LWQ3YWE4NTkzMGVmYSIsImlhdCI6MTU2NTUzNzg0NCwiZXhwIjoxNTY1NTczODQ0fQ.ZI-pGeN2kpDkvD3rEwqyP1o95d9JNq4FIXsP6FaRigI",
-									"type": "string"
-								}
-							]
+							"type": "noauth"
 						},
 						"method": "POST",
 						"header": [
@@ -73,7 +66,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"email\": \"bob@gmail.com\",\n  \"password\": \"asdfasdf\"\n}"
+							"raw": "{\n  \"email\": \"user1@gmail.com\",\n  \"password\": \"asdfasdf\"\n}"
 						},
 						"url": {
 							"raw": "{{API_URL}}/auth/login",
@@ -115,6 +108,138 @@
 							"path": [
 								"auth",
 								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Email confirm",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"code\": \"dea7\"\n}"
+						},
+						"url": {
+							"raw": "{{API_URL}}/auth/email-confirm",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"auth",
+								"email-confirm"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Password reset",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"user3@gmail.com\"\n\t\n}"
+						},
+						"url": {
+							"raw": "{{API_URL}}/auth/password-reset",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"auth",
+								"password-reset"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Password restore",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"code\": \"av95\",\n\t\"email\": \"user3@gmail.com\",\n\t\"password\": \"123456\"\n}"
+						},
+						"url": {
+							"raw": "{{API_URL}}/auth/password-restore",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"auth",
+								"password-restore"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Send confirm email code",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{API_URL}}/auth/send-confirm-code",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"auth",
+								"send-confirm-code"
 							]
 						}
 					},
@@ -206,7 +331,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"title\": \"product\",\n  \"description\": \"description\"\n}"
+							"raw": "{\n  \"title\": \"product\",\n  \"description\": \"description\",\n  \"pictures\": []\n}"
 						},
 						"url": {
 							"raw": "{{API_URL}}/my-products",
@@ -223,16 +348,6 @@
 				{
 					"name": "Get product",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{TOKEN}}",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [],
 						"body": {
@@ -240,12 +355,12 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{API_URL}}/my-products/:id",
+							"raw": "{{API_URL}}/products/:id",
 							"host": [
 								"{{API_URL}}"
 							],
 							"path": [
-								"my-products",
+								"products",
 								":id"
 							],
 							"variable": [
@@ -281,7 +396,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"title\": \"product1\",\n  \"description\": \"description1\"\n}"
+							"raw": "{\n\t\"deletedPictures\": [],\n\t\"description\": \"nice phone13\",\n\t\"pictures\": [],\n\t\"title\": \"Phone13\"\n}"
 						},
 						"url": {
 							"raw": "{{API_URL}}/my-products/:id",
@@ -295,7 +410,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "1"
+									"value": "5c180ddc-5073-41fe-8fae-4223ed0bb39e"
 								}
 							]
 						}
@@ -340,6 +455,51 @@
 								{
 									"key": "id",
 									"value": "5c180ddc-5073-41fe-8fae-4223ed0bb39e"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add product review",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"rating\": 4,\n\t\"text\": \"nice product\"\n}"
+						},
+						"url": {
+							"raw": "{{API_URL}}/products/:id/add-review",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"products",
+								":id",
+								"add-review"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "b817c071-9784-451f-a737-c124c862fd96"
 								}
 							]
 						}
