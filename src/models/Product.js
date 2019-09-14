@@ -1,4 +1,5 @@
 import mongoose, { Schema } from 'mongoose';
+import { ReviewSchema } from './Review';
 
 const ProductSchema = new Schema({
     title: {
@@ -20,10 +21,7 @@ const ProductSchema = new Schema({
         required: true
     },
     reviews: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: 'Review'
-        }
+        ReviewSchema
     ]
 }, {
     timestamps: true,

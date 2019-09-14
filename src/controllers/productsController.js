@@ -37,12 +37,8 @@ const productsController = {
         const product = await Product
             .findById(id)
             .populate('user')
-            .populate({
-                path: 'reviews',
-                populate: {
-                    path: 'user'
-                }
-            });
+            .populate('reviews.user');
+
         return successResponse(res, product);
     },
 
@@ -92,15 +88,14 @@ const productsController = {
     addReview: async (req, res) => {
         const { user, body: { rating, text }, params: { id } } = req;
 
-        const review = await Review.create({
-            rating,
-            text,
-            user: user._id,
-            product: id
-        });
-
         const product = await Product.findById(id);
-        product.reviews.push(review);
+
+        product.reviews.push(new Review({
+                rating,
+                text,
+                user: user._id,
+        }));
+
         await product.save();
 
         return successResponse(res, { message: 'Review added successfully' });
