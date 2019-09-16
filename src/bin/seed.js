@@ -8,14 +8,14 @@ const seedUsers = [
     {
         _id: '5d616bf8d5ddb142e8c55bcc',
         userName: 'User1',
-        email: 'user1@gmail.com',
+        email: 'user1@email.com',
         password: 'asdfasdf',
         isConfirmed: true
     },
     {
         _id: '5d616bf8d5ddb142e8c55bcd',
         userName: 'User2',
-        email: 'user2@gmail.com',
+        email: 'user2@email.com',
         password: 'asdfasdf',
         isConfirmed: true
     },
@@ -103,13 +103,13 @@ mongoose.connection.once('open', async () => {
     /* Products */
     await Product.deleteMany();
     console.log('Products collection removed');
-    const products = await Promise.all(seedProducts.map(async product => Product.create({
+    const products = await Promise.all(seedProducts.map(product => Product.create({
             ...product,
             user: users[product.user].id,
-            reviews: await Promise.all(product.reviews.map(review => Review.create({
+            reviews: product.reviews.map(review => new Review({
                 ...review,
                 user: users[review.user].id
-            })))
+            }))
         })
     ));
     console.log(`${ products.length } products success added`);
