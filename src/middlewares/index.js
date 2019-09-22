@@ -18,7 +18,7 @@ export const loginGuard = () => (req, res, next) => {
 
 export const accessGuard = () => (req, res, next) => {
     passport.authenticate('jwt', { session: false }, (err, user, info) => {
-        if (err || !user) {
+        if (err || !user || !user.isConfirmed) {
             const message = info ? info.message : 'Forbidden';
             const code = info && info.expiredAt ? 401 : 403;
 
